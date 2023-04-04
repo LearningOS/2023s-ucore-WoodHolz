@@ -27,7 +27,8 @@ void main()
 	clean_bss();
 	console_init();
 	printf("\n");
-	printf("hello wrold!\n");
+	printf("hello world!\n");
+	printf("你是个大笨蛋\n");
 	errorf("stext: %p", s_text);
 	warnf("etext: %p", e_text);
 	infof("sroda: %p", s_rodata);
