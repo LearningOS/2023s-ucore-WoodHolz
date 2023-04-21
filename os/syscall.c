@@ -45,8 +45,12 @@ uint64 sys_task_info(TaskInfo *ti)
 	uint64 cycle = get_cycle();
 	printf("\n**********\n%d\n**********\n", cycle);
 	ti->status = Running; // Emmm 
+	/* 可能精度会受到影响
 	ti->time = ((cycle % CPU_FREQ) * 1000 / CPU_FREQ) - \
 		((curr_proc()->str_time % CPU_FREQ) * 1000 / CPU_FREQ);
+	*/
+	ti->time = cycle * 1000 / CPU_FREQ - \
+		curr_proc()->str_time *1000 / CPU_FREQ;
 	int i = 0;
 	while (i < MAX_SYSCALL_NUM)
 	{
