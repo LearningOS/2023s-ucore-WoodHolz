@@ -88,9 +88,12 @@ void scheduler(void)
 				/*
 				* LAB1: you may need to init proc start time here
 				*/
-				if (p->str_time) panic(\
-					"\nError! This time str_time should be 0\n");
+				/*
+				if (p->str_time != 0) printf(\
+					"\nError! This time str_time should be 0\n"); 
 				else p->str_time = get_cycle();
+				*/
+				if (!p->str_time) p->str_time = get_cycle();
 				p->state = RUNNING;
 				current_proc = p;
 				swtch(&idle.context, &p->context);
