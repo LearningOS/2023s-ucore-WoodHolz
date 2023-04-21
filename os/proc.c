@@ -36,8 +36,17 @@ void proc_init(void)
 		* LAB1: you may need to initialize your new fields of proc here
 		*/
 		p->str_time = 0;
+		/* 只能清空数组的最后一个元素，并不能清空整个数组。
 		memset(p->syscall_times, 0, \
 			sizeof(p->syscall_times[MAX_SYSCALL_NUM]));
+		*/
+
+		/**
+		 * 	在下面这个表达式中，sizeof 操作符计算的是 unsigned int（uint32） 类型的大小，
+		 * 	然后再乘以 MAX_SYSCALL_NUM 得到要清空的字节数。
+		 * 	这样就可以正确地清空整个数组。
+		*/
+		memset(p->syscall_times, 0, MAX_SYSCALL_NUM * sizeof(uint32));
 	}
 	idle.kstack = (uint64)boot_stack_top;
 	idle.pid = 0;

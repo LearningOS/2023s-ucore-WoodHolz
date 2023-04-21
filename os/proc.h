@@ -40,7 +40,7 @@ struct proc {
 	* LAB1: you may need to add some new fields here
 	*/
 	uint64 str_time;
-	uint64 syscall_times[MAX_SYSCALL_NUM];
+	uint32 syscall_times[MAX_SYSCALL_NUM];
 
 };
 
@@ -56,7 +56,7 @@ typedef enum {
 
 typedef struct TaskInfo {
     TaskStatus status; // emmm come on it must be Running
-	uint64 syscall_times[MAX_SYSCALL_NUM];
+	uint32 syscall_times[MAX_SYSCALL_NUM];
     int time;
 }TaskInfo;
 
