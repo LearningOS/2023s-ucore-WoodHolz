@@ -8,32 +8,32 @@
 #define PIPESIZE (512)
 #define FILEPOOLSIZE (NPROC * FD_BUFFER_SIZE)
 
-// in-memory copy of an inode,it can be used to quickly locate file entities on disk
+// inode的内存副本，用于快速定位磁盘上的文件实体。
 struct inode {
-	uint dev; // Device number
-	uint inum; // Inode number
-	int ref; // Reference count
-	int valid; // inode has been read from disk?
-	short type; // copy of disk inode
+	uint dev; // 设备数量
+	uint inum; // Inode编号
+	int ref; // 引用计数
+	int valid; // 表示inode是否被磁盘读取
+	short type; // disk inode的拷贝
 	uint size;
 	uint addrs[NDIRECT + 1];
 	// LAB4: You may need to add link count here
 };
 
-//a struct for pipe
+// 管道结构
 struct pipe {
 	char data[PIPESIZE];
-	uint nread; // number of bytes read
-	uint nwrite; // number of bytes written
-	int readopen; // read fd is still open
-	int writeopen; // write fd is still open
+	uint nread; // 读取的字节数
+	uint nwrite; // 写入的字节数
+	int readopen; // 读取文件描述符是否仍然打开
+	int writeopen; // 写入文件描述符是否仍然打开
 };
 
-// file.h
-// Defines a file in memory that provides information about the current use of the file and the corresponding inode location
+// file.h的核心
+// 该结构体在内存中表示一个文件，提供了该文件当前使用情况以及相应的 inode 位置的信息。
 struct file {
 	enum { FD_NONE = 0, FD_PIPE, FD_INODE, FD_STDIO } type;
-	int ref; // reference count
+	int ref; // 引用计数
 	char readable;
 	char writable;
 	struct pipe *pipe; // FD_PIPE
@@ -41,11 +41,11 @@ struct file {
 	uint off;
 };
 
-//A few specific fd
+// 特殊的文件描述符
 enum {
-	STDIN = 0,
-	STDOUT = 1,
-	STDERR = 2,
+	STDIN = 0, // 标准输入
+	STDOUT = 1, // 标准输出
+	STDERR = 2, // 标准错误
 };
 
 extern struct file filepool[FILEPOOLSIZE];
@@ -62,4 +62,4 @@ uint64 inoderead(struct file *, uint64, uint64);
 struct file *stdio_init(int);
 int show_all_files();
 
-#endif // FILE_H
+#endif
