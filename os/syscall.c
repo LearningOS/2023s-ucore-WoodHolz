@@ -166,10 +166,13 @@ uint64 sys_pipe(uint64 fdarray)
 	if (f0 < 0 || f1 < 0) {
 		return -1;
 	}
+	// 申请2个空file
 	f0 = filealloc();
 	f1 = filealloc();
+	// 分配一个管道，与2个文件描述符关联
 	if (pipealloc(f0, f1) < 0)
 		goto err0;
+	// 分配2个文件描述符，并与文件指针关联
 	fd0 = fdalloc(f0);
 	fd1 = fdalloc(f1);
 	if (fd0 < 0 || fd1 < 0)

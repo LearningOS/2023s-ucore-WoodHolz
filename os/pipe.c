@@ -80,7 +80,7 @@ int pipewrite(struct pipe *pi, uint64 addr, int n)
 			yield(); // 把当前进程让出 CPU，在等待其他进程耗尽 CPU 时间片，之后再尝试写入
 		}
 		else {
-			// 计算可供写入的字节数
+			// 计算一次读的字节数
 			size = MIN(MIN(n - w, 
 				    pi->nread + PIPESIZE - pi->nwrite),
 				    PIPESIZE - (pi->nwrite % PIPESIZE));
@@ -88,7 +88,7 @@ int pipewrite(struct pipe *pi, uint64 addr, int n)
 			if (copyin(p->pagetable,
 				   	&pi->data[pi->nwrite % PIPESIZE], addr + w,
 				   	size) < 0) {
-				panic("copyin");
+						panic("copyin");
 			}
 			// 更新管道记录的写入字节数和本次已写入的字节数
 			pi->nwrite += size;
@@ -122,13 +122,15 @@ int piperead(struct pipe *pi, uint64 addr, int n)
 			return -1;
 	}
 	while (r < n && size != 0) { 
-		if (pi->nread == pi->nwrite)
+		if (pi->nread == pi->nwrite) // // pipe 可读内容为空，返回
 			break;
+		// 计算一次写的字节数
 		size = MIN(MIN(n - r, pi->nwrite - pi->nread),
-			   PIPESIZE - (pi->nread % PIPESIZE));
+			   	PIPESIZE - (pi->nread % PIPESIZE));
+		// 使用 copyout 写用户内存
 		if (copyout(p->pagetable, addr + r,
 			    &pi->data[pi->nread % PIPESIZE], size) < 0) {
-			panic("copyout");
+					panic("copyout");
 		}
 		pi->nread += size;
 		r += size;
